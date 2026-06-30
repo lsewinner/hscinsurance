@@ -1,0 +1,480 @@
+<!doctype html>
+<!--
+  HSC Insurance Group — single-file, deployable site.
+  Fonts load from Google Fonts and can be swapped via :root --font-* vars + the <link> in <head>.
+  Colours are all in :root. Logo is embedded (base64) in the header — no external asset dependencies.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSC Insurance Group — Underwriting capacity, regionally deployed</title>
+<meta name="description" content="HSC Insurance Group is a Managing General Agent and reinsurance coverholder binding and administering commercial risk across China, the UK, Singapore and Malaysia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EDE3;
+    --paper-2:#ECE4D6;
+    --ink:#16202D;
+    --navy:#0F1A2A;
+    --navy-2:#16273E;
+    --red:#CB2030;
+    --red-deep:#A81828;
+    --gold:#C2974A;
+    --muted:#535D67;
+    --navy-text:#AEB7C1;
+    --navy-dim:#7E8896;
+    --line:rgba(22,32,45,.14);
+    --line-navy:rgba(255,255,255,.12);
+    --font-display:'Playfair Display',Georgia,serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+    --maxw:1240px;
+    --pad:clamp(20px,5vw,72px);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--font-body);font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+  /* ---------- shared type ---------- */
+  .eyebrow{
+    font-family:var(--font-mono);font-size:12.5px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--red);
+    margin:0 0 22px;
+  }
+  .eyebrow.gold{color:var(--gold)}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;letter-spacing:-.01em;line-height:1.04}
+  .display{font-size:clamp(2.6rem,6.2vw,5rem)}
+  .h2{font-size:clamp(2rem,4.4vw,3.25rem);line-height:1.06}
+  .lead{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--muted);max-width:46ch;margin:26px 0 0;line-height:1.55}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--font-body);font-weight:600;font-size:15px;letter-spacing:.01em;
+    padding:15px 26px;border:1.5px solid transparent;cursor:pointer;
+    transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .btn:focus-visible{outline:2.5px solid var(--gold);outline-offset:3px}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-red:hover{background:var(--red-deep)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+  .btn-navy{background:var(--navy);color:var(--paper)}
+  .btn-navy:hover{background:var(--ink)}
+  .btn-white{background:#fff;color:var(--red);font-weight:600}
+  .btn-white:hover{background:#f3e9e1}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(242,237,227,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:28px;height:74px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:700;font-size:21px;white-space:nowrap}
+  .mark-img{height:42px;width:auto;display:block}
+  .nav-links{display:flex;gap:30px;margin-left:auto}
+  .nav-links a{font-size:15px;color:var(--ink);position:relative;padding:4px 0}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--red);transition:width .2s ease}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{margin-left:6px}
+  .menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line);width:44px;height:40px;cursor:pointer;align-items:center;justify-content:center}
+  .menu-btn span,.menu-btn span::before,.menu-btn span::after{content:"";display:block;width:20px;height:1.5px;background:var(--ink);position:relative}
+  .menu-btn span::before{position:absolute;top:-6px}.menu-btn span::after{position:absolute;top:6px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(48px,7vw,96px) 0 clamp(56px,8vw,104px)}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,72px);align-items:center}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
+  .display .accent{color:var(--red);font-style:italic;font-weight:600}
+
+  /* capacity-flow card (signature) */
+  .flowcard{background:var(--navy);border-radius:14px;padding:30px 26px 26px;color:var(--navy-text)}
+  .flowcard .tag{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--navy-dim);margin-bottom:6px}
+  .flowcard svg{width:100%;height:auto;display:block}
+  .flow-node{font-family:var(--font-mono);font-size:12px;fill:#E9EBEE}
+  .flow-sub{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;fill:var(--navy-dim)}
+  .flow-hub{font-family:var(--font-display);font-weight:700;font-size:15px;fill:#fff}
+  .flow-hub-sub{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.12em;fill:var(--navy-dim);text-transform:uppercase}
+
+  /* ---------- section scaffold ---------- */
+  .section{padding:clamp(64px,9vw,120px) 0}
+  .section-head{max-width:60ch}
+  .section-head .lead{max-width:54ch}
+  .grid-line{display:grid;border-top:1px solid var(--line)}
+  .cell{padding:40px 32px 44px;border-bottom:1px solid var(--line)}
+  .cell .klabel{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+  .cell h3{font-size:1.45rem;margin-bottom:12px}
+  .cell p{color:var(--muted);font-size:15.5px;margin:0;line-height:1.55}
+
+  /* who-we-are pillars (3 col) */
+  .pillars{margin-top:clamp(40px,6vw,72px)}
+  .pillars.grid-line{grid-template-columns:repeat(3,1fr)}
+  .pillars .cell{padding-left:0;padding-right:36px}
+
+  /* lines of business (2x2) */
+  .lob.grid-line{grid-template-columns:repeat(2,1fr)}
+  .lob .cell{position:relative}
+  .lob .cell:nth-child(odd){border-right:1px solid var(--line)}
+  .lob .cell h3{font-size:1.65rem}
+
+  /* ---------- capacity (dark) ---------- */
+  .dark{background:var(--navy);color:var(--navy-text)}
+  .dark h2,.dark .h2{color:#F4EFE6}
+  .dark .lead{color:var(--navy-text)}
+  .panels{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line-navy);margin-top:clamp(40px,6vw,72px)}
+  .panel{padding:38px 26px 34px;border-bottom:1px solid var(--line-navy);border-right:1px solid var(--line-navy)}
+  .panel:nth-child(5n),.panel:last-child{border-right:none}
+  .panel .market{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .panel h3{font-size:1.5rem;color:#F4EFE6;margin-bottom:20px}
+  .panel ul{list-style:none;padding:0;margin:0 0 26px}
+  .panel li{position:relative;padding-left:20px;font-size:15px;color:var(--navy-text);margin-bottom:9px}
+  .panel li::before{content:"—";position:absolute;left:0;color:var(--gold)}
+  .panel .status{font-family:var(--font-mono);font-size:11.5px;color:var(--navy-dim);padding-top:18px;border-top:1px solid var(--line-navy);letter-spacing:.01em}
+
+  /* for brokers steps (numbered process) */
+  .steps.grid-line{grid-template-columns:repeat(4,1fr)}
+  .steps .cell{border-right:1px solid var(--line)}
+  .steps .cell:last-child{border-right:none}
+  .steps .num{font-family:var(--font-mono);font-size:13px;color:var(--red);margin-bottom:18px;font-weight:500}
+  .steps h3{font-size:1.3rem}
+
+  /* ---------- cta band ---------- */
+  .cta-band{background:var(--red);color:#fff}
+  .cta-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:clamp(48px,7vw,84px) 0}
+  .cta-band h2{color:#fff;max-width:18ch;font-size:clamp(1.9rem,3.6vw,2.9rem)}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--navy);color:var(--navy-text)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding:clamp(56px,7vw,84px) 0 0}
+  .foot h4{font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#F4EFE6;font-weight:500;margin:0 0 20px}
+  .foot p,.foot a,.foot li{font-size:15px;color:var(--navy-text);margin:0 0 10px}
+  .foot ul{list-style:none;padding:0;margin:0}
+  .foot a:hover{color:#fff}
+  .foot-bottom{margin-top:clamp(48px,6vw,72px);padding:30px 0 48px;border-top:1px solid var(--line-navy)}
+  .disclaimer{font-size:12.5px;line-height:1.7;color:var(--navy-dim);max-width:92ch;margin:0 0 14px}
+  .copy{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.04em;color:var(--navy-dim)}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1200px){
+    .panels{grid-template-columns:repeat(3,1fr)}
+    .panel{border-right:1px solid var(--line-navy)}
+    .panel:nth-child(3n){border-right:none}
+  }
+  @media (max-width:1000px){
+    .hero-grid{grid-template-columns:1fr;gap:44px}
+    .flowcard{max-width:520px}
+    .pillars.grid-line{grid-template-columns:1fr}
+    .pillars .cell{padding-right:0}
+    .panels{grid-template-columns:repeat(2,1fr)}
+    .panel{border-right:1px solid var(--line-navy)}
+    .panel:nth-child(2n){border-right:none}
+    .steps.grid-line{grid-template-columns:repeat(2,1fr)}
+    .steps .cell:nth-child(2){border-right:none}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:680px){
+    .nav-links,.nav-cta{display:none}
+    .nav-links.open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:8px var(--pad) 20px}
+    .nav-links.open a{padding:14px 0;border-bottom:1px solid var(--line)}
+    .menu-btn{display:flex}
+    .lob.grid-line{grid-template-columns:1fr}
+    .lob .cell:nth-child(odd){border-right:none}
+    .panels{grid-template-columns:1fr}
+    .panel{border-right:none!important}
+    .steps.grid-line{grid-template-columns:1fr}
+    .steps .cell{border-right:none}
+    .cell{padding:32px 0 36px}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><img class="mark-img" src="data:image/png;base64,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" alt="HSC Insurance Group">HSC Insurance Group</a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#who">Who We Are</a>
+      <a href="#capacity">Capacity</a>
+      <a href="#lob">Lines of Business</a>
+      <a href="#brokers">For Brokers</a>
+    </nav>
+    <a class="btn btn-navy nav-cta" href="#brokers">Submit a Risk</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <p class="eyebrow">Managing General Agent · Coverholder</p>
+        <h1 class="display">Underwriting capacity,<br><span class="accent">regionally deployed.</span></h1>
+        <p class="lead">HSC Insurance Group binds and administers commercial risk on behalf of reinsurance capacity across China, South Korea, the United Kingdom, Singapore and Malaysia — combining local underwriting judgement with the balance sheets to stand behind it.</p>
+        <div class="hero-actions">
+          <a class="btn btn-red" href="#capacity">View Capacity Map</a>
+          <a class="btn btn-ghost" href="#brokers">Broker Access</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="flowcard">
+          <div class="tag">Capacity Flow — Illustrative</div>
+          <svg viewBox="0 0 520 360" role="img" aria-label="Capacity flow: China, South Korea, United Kingdom, Singapore and Malaysia treaty panels flow into HSC, which holds the pen and deploys into commercial, marine cargo and specialty lines.">
+            <defs>
+              <style>
+                .cn-in{fill:none;stroke:#3C5170;stroke-width:1.5}
+                .cn-out{fill:none;stroke:#C2974A;stroke-width:1.5}
+                .dot{fill:#C2974A}
+              </style>
+            </defs>
+            <!-- left -> hub -->
+            <path class="cn-in" d="M150 48 C 214 48, 220 176, 245 179"/>
+            <path class="cn-in" d="M150 114 C 214 114, 224 178, 245 180"/>
+            <path class="cn-in" d="M150 180 C 200 180, 222 180, 245 180"/>
+            <path class="cn-in" d="M150 246 C 214 246, 224 182, 245 181"/>
+            <path class="cn-in" d="M150 312 C 214 312, 220 184, 245 182"/>
+            <!-- hub -> right -->
+            <path class="cn-out" d="M313 173 C 360 150, 385 96, 452 96"/>
+            <path class="cn-out" d="M313 180 C 370 180, 385 180, 452 180"/>
+            <path class="cn-out" d="M313 187 C 360 226, 385 268, 452 268"/>
+
+            <!-- left nodes -->
+            <g><circle class="dot" cx="150" cy="48" r="3.5"/><text class="flow-node" x="162" y="44">China</text><text class="flow-sub" x="162" y="58">Treaty Panel</text></g>
+            <g><circle class="dot" cx="150" cy="114" r="3.5"/><text class="flow-node" x="162" y="110">South Korea</text><text class="flow-sub" x="162" y="124">Treaty Panel</text></g>
+            <g><circle class="dot" cx="150" cy="180" r="3.5"/><text class="flow-node" x="162" y="176">United Kingdom</text><text class="flow-sub" x="162" y="190">Treaty Panel</text></g>
+            <g><circle class="dot" cx="150" cy="246" r="3.5"/><text class="flow-node" x="162" y="242">Singapore</text><text class="flow-sub" x="162" y="256">Treaty Panel</text></g>
+            <g><circle class="dot" cx="150" cy="312" r="3.5"/><text class="flow-node" x="162" y="308">Malaysia</text><text class="flow-sub" x="162" y="322">Treaty Panel</text></g>
+
+            <!-- hub -->
+            <circle cx="279" cy="180" r="34" fill="none" stroke="#3C5170" stroke-width="1.5"/>
+            <text class="flow-hub" x="279" y="177" text-anchor="middle">HSC</text>
+            <text class="flow-hub-sub" x="279" y="191" text-anchor="middle">Pen Held</text>
+
+            <!-- right nodes -->
+            <g><circle class="dot" cx="452" cy="96" r="3.5"/><text class="flow-node" x="440" y="92" text-anchor="end">Commercial</text></g>
+            <g><circle class="dot" cx="452" cy="180" r="3.5"/><text class="flow-node" x="440" y="184" text-anchor="end">Marine Cargo</text></g>
+            <g><circle class="dot" cx="452" cy="268" r="3.5"/><text class="flow-node" x="440" y="272" text-anchor="end">Specialty</text></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE -->
+  <section class="section" id="who">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Who We Are</p>
+        <h2 class="h2">We hold the pen.<br>Reinsurers hold the risk.</h2>
+        <p class="lead">HSC operates as a Managing General Agent and reinsurance coverholder — underwriting, binding, and administering policies on a delegated authority basis, within risk appetite and limits set jointly with our capacity partners.</p>
+      </div>
+      <div class="pillars grid-line reveal">
+        <div class="cell">
+          <div class="klabel">Delegated Authority</div>
+          <h3>Binding, not fronting</h3>
+          <p>We underwrite within agreed treaty terms and bind on behalf of our reinsurer panel — the capital sits with them, the underwriting judgement and local market access sits with us.</p>
+        </div>
+        <div class="cell">
+          <div class="klabel">Regional Reach</div>
+          <h3>Five markets, one pen</h3>
+          <p>Active treaty relationships spanning China, South Korea, the UK, Singapore and Malaysia give us the breadth to place risk where it's underwritten best, not just where it's submitted.</p>
+        </div>
+        <div class="cell">
+          <div class="klabel">Specialty Focus</div>
+          <h3>Built for complexity</h3>
+          <p>We specialise in lines that need underwriting judgement, not just rating tables — commercial property, marine cargo, and emerging specialty risk including EV and warranty business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPACITY (dark) -->
+  <section class="section dark" id="capacity">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow gold">Capacity</p>
+        <h2 class="h2">Reinsurer panel, by market</h2>
+        <p class="lead">Each market brings its own appetite, limits and class focus. Panel composition shown here is illustrative pending final treaty disclosure.</p>
+      </div>
+      <div class="panels reveal">
+        <div class="panel">
+          <div class="market">China</div>
+          <h3>CN Panel</h3>
+          <ul><li>Marine cargo &amp; hull</li><li>Specialty EL/WC</li><li>Inward facultative</li></ul>
+          <div class="status">Status: active treaty — terms under renewal</div>
+        </div>
+        <div class="panel">
+          <div class="market">South Korea</div>
+          <h3>KR Panel</h3>
+          <ul><li>Real estate</li><li>Property</li><li>High-end medical</li></ul>
+          <div class="status">Status: active treaty — high volume</div>
+        </div>
+        <div class="panel">
+          <div class="market">United Kingdom</div>
+          <h3>UK Panel</h3>
+          <ul><li>Commercial property</li><li>Specialty casualty</li><li>Capacity oversight</li></ul>
+          <div class="status">Status: active treaty — Lloyd's-aligned</div>
+        </div>
+        <div class="panel">
+          <div class="market">Singapore</div>
+          <h3>SG Panel</h3>
+          <ul><li>SME &amp; commercial P&amp;C</li><li>Warranty &amp; extended cover</li><li>Regional fronting</li></ul>
+          <div class="status">Status: active treaty — home market</div>
+        </div>
+        <div class="panel">
+          <div class="market">Malaysia</div>
+          <h3>MY Panel</h3>
+          <ul><li>Commercial property</li><li>Trade credit support</li><li>SEA distribution</li></ul>
+          <div class="status">Status: active treaty — capacity scaling</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINES OF BUSINESS -->
+  <section class="section" id="lob">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Lines of Business</p>
+        <h2 class="h2">Where we underwrite</h2>
+        <p class="lead">Focused capacity, not a broad panel of everything. We go deep in lines where regional underwriting judgement changes the outcome.</p>
+      </div>
+      <div class="lob grid-line reveal">
+        <div class="cell">
+          <div class="klabel">LOB</div>
+          <h3>Commercial Property &amp; SME Package</h3>
+          <p>Risk-graded underwriting for small and mid-sized commercial accounts, with fast quote-bind cycles for brokers placing volume business.</p>
+        </div>
+        <div class="cell">
+          <div class="klabel">LOB</div>
+          <h3>Marine Cargo</h3>
+          <p>Open cover and single-shipment placements across regional trade lanes, underwritten with cargo-specific loss experience rather than generic rating.</p>
+        </div>
+        <div class="cell">
+          <div class="klabel">LOB</div>
+          <h3>Specialty &amp; Extended Warranty</h3>
+          <p>Including EV battery and component warranty products — emerging risk classes where reinsurer comfort depends on underwriting discipline, not just price.</p>
+        </div>
+        <div class="cell">
+          <div class="klabel">LOB</div>
+          <h3>Trade Credit &amp; Political Risk Support</h3>
+          <p>Selective participation alongside our Malaysia and China panel, for cedants needing regional credit risk perspective.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR BROKERS -->
+  <section class="section" id="brokers">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">For Brokers &amp; Cedants</p>
+        <h2 class="h2">How a submission<br>moves through HSC</h2>
+        <p class="lead">A fixed sequence, run the same way for every account — so brokers know what to expect and when.</p>
+      </div>
+      <div class="steps grid-line reveal">
+        <div class="cell">
+          <div class="num">01</div>
+          <h3>Submission received</h3>
+          <p>Risk details, loss history and terms sought are logged against the relevant treaty and class.</p>
+        </div>
+        <div class="cell">
+          <div class="num">02</div>
+          <h3>Underwriting review</h3>
+          <p>Assessed against panel appetite and binding authority limits; referred to capacity partners where required.</p>
+        </div>
+        <div class="cell">
+          <div class="num">03</div>
+          <h3>Terms issued</h3>
+          <p>Quote returned with clear conditions, sub-limits and any subjectivities — no terms held back for negotiation theatre.</p>
+        </div>
+        <div class="cell">
+          <div class="num">04</div>
+          <h3>Bound &amp; administered</h3>
+          <p>Policy issued and administered by HSC for the life of the risk, including claims coordination with the panel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <div class="wrap cta-inner">
+      <h2 class="h2">Have a risk that needs regional underwriting judgement?</h2>
+      <a class="btn btn-white" href="mailto:underwriting@hscinsurance.co.uk?subject=Risk%20submission">Submit a Risk</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot">
+        <h4>HSC Insurance Group</h4>
+        <p>Think globally, act locally.</p>
+        <p>Singapore</p>
+      </div>
+      <div class="foot">
+        <h4>Markets</h4>
+        <ul>
+          <li>China</li>
+          <li>South Korea</li>
+          <li>United Kingdom</li>
+          <li>Singapore</li>
+          <li>Malaysia</li>
+        </ul>
+      </div>
+      <div class="foot">
+        <h4>Contact</h4>
+        <!-- TODO: confirm real address + domain before launch -->
+        <p><a href="mailto:underwriting@hscinsurance.co.uk">underwriting@hscinsurance.co.uk</a></p>
+        <p><a href="#brokers">Broker Submission Guide</a></p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p class="copy">© <span id="yr"></span> HSC Insurance Group</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  var mb=document.getElementById('menuBtn'),nl=document.getElementById('navlinks');
+  mb.addEventListener('click',function(){
+    var open=nl.classList.toggle('open');
+    mb.setAttribute('aria-expanded',open);
+  });
+  nl.addEventListener('click',function(e){if(e.target.tagName==='A')nl.classList.remove('open');});
+
+  // scroll reveal
+  var els=document.querySelectorAll('.reveal');
+  if('IntersectionObserver'in window){
+    var io=new IntersectionObserver(function(en){
+      en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});
+    },{threshold:.12});
+    els.forEach(function(el){io.observe(el);});
+  }else{els.forEach(function(el){el.classList.add('in');});}
+
+  // year
+  document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
